@@ -1,6 +1,13 @@
 CMPUT404-assignment-websockets
 ==============================
 
+
+Mandy Meindersma's Notes:
+==============================
+
+I used the example code from Hindle here: https://github.com/abramhindle/WebSocketsExamples/blob/master/chat.py
+
+
 CMPUT404-assignment-websockets
 
 See requirements.org (plain-text) for a description of the project.
