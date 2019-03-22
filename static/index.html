@@ -43,6 +43,7 @@ function debug(str) {
 debug("Test");
 
 world = {};
+colour_direction = undefined;
 
 //XXX: TODO Make this prettier!
 function drawCircle(context,entity) {
@@ -125,9 +126,39 @@ function addEntity(entity, data) {
     world[entity] = data;
     drawNextFrame(); // (but should we?)
     //XXX: Send a XHTML Request that updates the entity you just modified!
+    //I have to write to the websocket and updates
+    socket.send( JSON.stringify( { [entity]: data } ) );
 }
 var counter = 0;
+var colour_counter = 0;
 function addEntityWithoutName(data) {
+    if (colour_direction === undefined) {
+      colour_direction = "front";
+    }
+    if (colour_counter >= 245) {
+      colour_direction = "back";
+    }
+
+    if (colour_counter <= 4) {
+      colour_direction = "front";
+    }
+
+    if (colour_direction == "back") {
+      colour_counter = (colour_counter -5)%255;
+      red = 0;
+      blue = (colour_counter)%255;
+      green = (colour_counter)%255;
+    } else {
+      colour_counter = (colour_counter +5)%255;
+      red = 0;
+      blue = (colour_counter)%255;
+      green = (colour_counter)%255;
+    }
+
+
+
+
+    data.colour = "rgb("+red+", "+blue+", "+green+")";
     var name = "X"+(counter++)%100;
     addEntity(name,data);
 }
@@ -254,6 +285,14 @@ function wsSetup() {
     socket = new WebSocket(url);
     socket.onopen = function() {
         //XXX: TODO What are you going to do here?
+        // fetch your world but with actual fetch
+        fetch("/world").then( (response) => {
+        response.json().then( (data) => {
+            world = data;
+            drawNextFrame();
+        });
+        });
+        drawFrame();
     };
     socket.onerror = function(msg) {
         debug("WebSocket Error:" + msg.data);
@@ -262,7 +301,11 @@ function wsSetup() {
         try {
             debug("WebSocket Recv:" + msg.data);
             //XXX: TODO What are you going to do here?
-            // this is the same as update from the last assignment           
+            // this is the same as update from the last assignment?
+            let pair = Object.entries(JSON.parse(msg.data))[0];
+            world[pair[0]] = pair[1];
+            drawNextFrame();
+
         } catch (e) {
             alert("socket on message: " + e);
         }
