@@ -99,7 +99,7 @@ def read_ws(ws,client):
     try:
         while True:
             msg = ws.receive()
-            print "WS RECV: %s" % msg
+            print("WS RECV:" + str(msg))
             if (msg is not None):
                 packet = json.loads(msg)
                 for entity in packet:
@@ -124,7 +124,7 @@ def subscribe_socket(ws):
             msg = client.get()
             ws.send(msg)
     except Exception as e:# WebSocketError as e:
-        print "WS Error %s" % e
+        print("WS Error" + str(e))
     finally:
         clients.remove(client)
         gevent.kill(g)
