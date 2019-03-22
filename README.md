@@ -6,6 +6,7 @@ Mandy Meindersma's Notes:
 ==============================
 
 I used the example code from Hindle here: https://github.com/abramhindle/WebSocketsExamples/blob/master/chat.py
+I also consulted Michael Paradis
 
 
 CMPUT404-assignment-websockets
